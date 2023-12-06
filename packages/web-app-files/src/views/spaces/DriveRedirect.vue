@@ -8,7 +8,6 @@
 import { computed, defineComponent, unref } from 'vue'
 import { useRoute, useRouter, useStore } from '@ownclouders/web-pkg'
 import { AppLoadingSpinner } from '@ownclouders/web-pkg'
-import { urlJoin } from '@ownclouders/web-client/src/utils'
 import { createFileRouteOptions } from '@ownclouders/web-pkg'
 import { createLocationSpaces } from '@ownclouders/web-pkg'
 
@@ -26,11 +25,6 @@ export default defineComponent({
       type: String,
       required: false,
       default: ''
-    },
-    appendHomeFolder: {
-      type: Boolean,
-      required: false,
-      default: false
     }
   },
   setup(props) {
@@ -42,26 +36,10 @@ export default defineComponent({
       return store.getters['runtime/spaces/spaces'].find((space) => space.driveType === 'personal')
     })
 
-    const itemPath = computed(() => {
-      if (!props.appendHomeFolder) {
-        return ''
-      }
-      const item = props.driveAliasAndItem.startsWith(fakePersonalDriveAlias)
-        ? urlJoin(props.driveAliasAndItem.slice(fakePersonalDriveAlias.length))
-        : '/'
-      if (item !== '/') {
-        return item
-      }
-      return store.getters.homeFolder
-    })
-
     if (!unref(personalSpace)) {
       router.replace(createLocationSpaces('files-spaces-projects'))
     } else {
-      const { params, query } = createFileRouteOptions(unref(personalSpace), {
-        path: unref(itemPath)
-      })
-
+      const { params, query } = createFileRouteOptions(unref(personalSpace))
       router
         .replace({
           ...unref(route),
