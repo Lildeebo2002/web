@@ -25,6 +25,8 @@
         :is-sub-panel-active="!!activePanel"
       />
       <space-info v-else-if="isSpaceHeaderVisible" class="sidebar-panel__space_info" />
+      <!-- IMPORTANT: keep this so content always takes all vertical space (c.f. compact-header class) -->
+      <div v-else />
     </template>
   </InnerSideBar>
 </template>

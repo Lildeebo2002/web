@@ -53,9 +53,12 @@
           </oc-button>
         </div>
 
-        <slot name="header" />
+        <slot name="header">
+          <!-- IMPORTANT: keep this so content always takes all vertical space (c.f. compact-header class) -->
+          <div />
+        </slot>
         <div class="sidebar-panel__body" :class="[`sidebar-panel__body-${panel.name}`]">
-          <div class="sidebar-panel__body-content">
+          <div :class="{ 'sidebar-panel__body-content-stretch': !panel.isRoot?.(panelContext) }">
             <slot name="body">
               <component
                 :is="panel.component"
@@ -371,6 +374,12 @@ export default defineComponent({
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--oc-space-small);
+    display: flex;
+    flex-direction: column;
+
+    &-content-stretch {
+      flex: 1;
+    }
   }
 
   &__navigation {
